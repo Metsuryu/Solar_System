@@ -10,8 +10,6 @@ I may add the other planets in the future.
 
 #TODOs for now:
 
-- Fix CSS and center canvas
-
 - Maybe remake it with p5js or some other framework
 
 - Make the moon cast a shadow on earth
