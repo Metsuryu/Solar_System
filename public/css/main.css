@@ -6,3 +6,12 @@ body {
 	background-color: black;
 	color: #cccccc;
 }
+
+input{
+	width: 80px;
+}
+
+.centered{
+	margin: auto;
+	text-align: center;
+}

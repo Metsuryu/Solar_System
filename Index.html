@@ -15,9 +15,9 @@
 
  <form  style="display:inline-block;">
   Earth rotation speed:
-  <input title="The default revolution takes 60 seconds, so if you want to rotate 365 times per revolution, set the speed to 365/60 = 60.83." style="width:80px" id="rotSpeed" type="number" width="4px" step="0.01" value="0.83">
+  <input title="The default revolution takes 60 seconds, so if you want to rotate 365 times per revolution, set the speed to 365/60 = 60.83." style="width:80px" id="rotSpeed" type="number" step="0.01" value="0.83">
 Earth revolution time:
-  <input title="Time needed to complete a revolution around the Sun in seconds. There are 31557600 seconds in a year if you're curious." style="width:80px" id="revSpeed" type="number" width="4px" value="60">
+  <input title="Time needed to complete a revolution around the Sun in seconds. There are 31557600 seconds in a year if you're curious." id="revSpeed" type="number" value="60">
 </form> 
 <button title="Sets the rotation and revolution speeds to the new value and resets the counters." style="display:inline-block;" onClick="speedUpdate();">Update</button>
  <form style="display:inline-block;">
@@ -28,14 +28,13 @@ Earth revolution time:
   Revolutions:
   <output id="revolutions">0</output>
 </form> 
+
+<div class="centered">
 <canvas id     = "canvas"
         width  = "600"
-        height = "600"
-        style  = "width: 600;
-                  height: 600;
-                  background-color:black;
-">
+        height = "600">
 </canvas>
+</div>
 
 </body>
 </html>

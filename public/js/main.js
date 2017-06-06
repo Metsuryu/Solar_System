@@ -7,9 +7,9 @@ var revolSpeed = 60; //Revolution speed
 var revolutions =  0; //Number of revolutions
 
 function init(){
-  sun.src = 'sun.jpg';
-  moon.src = 'moon.jpg';
-  earth.src = 'earth.jpg';
+  sun.src = 'public/img/sun.jpg';
+  moon.src = 'public/img/moon.jpg';
+  earth.src = 'public/img/earth.jpg';
   window.requestAnimationFrame(draw);
 }
 
