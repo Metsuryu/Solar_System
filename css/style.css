@@ -1,0 +1,14 @@
+#canvas {
+	display: flex;
+	justify-content: center;
+	background-color: #555; /*TODO: remove, make background black*/
+}
+
+h1 {
+	text-align: center;
+}
+
+body {
+	background-color: #222; /*TODO: Maybe make black*/
+	color: #cccccc;
+}

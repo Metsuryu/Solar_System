@@ -2,15 +2,11 @@
 Here it is:
 http://solsys.co.nf/
 
-A small Solar system with Sun, Earth, and Moon, animated with Javascript.
-You can change the speed of the rotation and revolution of the Earth. 
-It also keeps track of the number of rotations and revolutions.
+I'm currently remaking it in Phaser.js from the old version that was pure Canvas.
 
-I may add the other planets in the future.
+A small Solar system with Sun, Earth and Moon, and Mars, animated with Phaser.js.
 
 #TODOs for now:
-
-- Maybe remake it with p5js or some other framework
 
 - Make the moon cast a shadow on earth
 
@@ -23,3 +19,7 @@ I may add the other planets in the future.
 - Add additional informations for other planets
 
 - Maybe make them clickable
+
+- Change the speed of the rotation and revolution of planets.
+
+- Add the other planets, and celestial objects.

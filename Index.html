@@ -1,40 +1,20 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<script src="jq/jquery-1.11.3.min.js"></script>
-<script src="jq/bootstrap.min.js"></script>
-<script type="text/javascript" src="public/js/main.js" ></script>
-<link rel="stylesheet" type="text/css" href="public/css/main.css">
-<title>Solar System</title>
+	<meta charset="utf-8">
+	<title>Solar System</title>
+	<script src="js\phaser.min.js"></script>
+	<script src="js\main.js"></script>
+	<link rel="stylesheet" type="text/css" href="css\style.css">
 </head>
 <body>
 
 <h1>Solar System</h1>
 
+<div id="canvas"></div>
 
- <form  style="display:inline-block;">
-  Earth rotation speed:
-  <input title="The default revolution takes 60 seconds, so if you want to rotate 365 times per revolution, set the speed to 365/60 = 60.83." style="width:80px" id="rotSpeed" type="number" step="0.01" value="0.83">
-Earth revolution time:
-  <input title="Time needed to complete a revolution around the Sun in seconds. There are 31557600 seconds in a year if you're curious." id="revSpeed" type="number" value="60">
-</form> 
-<button title="Sets the rotation and revolution speeds to the new value and resets the counters." style="display:inline-block;" onClick="speedUpdate();">Update</button>
- <form style="display:inline-block;">
-  Rotations:
-  <output id="rotations">0</output>
-</form>
- <form style="display:inline-block;">
-  Revolutions:
-  <output id="revolutions">0</output>
-</form> 
 
-<div class="centered">
-<canvas id     = "canvas"
-        width  = "600"
-        height = "600">
-</canvas>
-</div>
+
 
 </body>
 </html>
