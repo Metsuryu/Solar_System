@@ -8,13 +8,9 @@ A small Solar system with Sun, Earth and Moon, and Mars, animated with Phaser.js
 
 #TODOs for now:
 
-- Make the moon cast a shadow on earth
-
 - Make site look nicer
 
 - Add additional informations
-
-- Add other planets
 
 - Add additional informations for other planets
 
