@@ -10,12 +10,4 @@ A small Solar system with Sun, Earth and Moon, and Mars, animated with Phaser.js
 
 - Make site look nicer
 
-- Add additional informations
-
-- Add additional informations for other planets
-
-- Maybe make them clickable
-
-- Change the speed of the rotation and revolution of planets.
-
 - Add the other planets, and celestial objects.

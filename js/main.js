@@ -22,24 +22,53 @@
             game.load.image("phobos", "img/Mars/Phobos.jpg");
 
             game.load.image("jupiter", "img/Jupiter/Jupiter.jpg");
+            game.load.image("callisto", "img/Jupiter/Moons/Callisto.jpg");
+            game.load.image("europa", "img/Jupiter/Moons/Europa.jpg");
+            game.load.image("ganymede", "img/Jupiter/Moons/Ganymede.jpg");
+            game.load.image("rhea", "img/Jupiter/Moons/Rhea.jpg");
+
+            game.load.image("saturn", "img/Saturn/Saturn.jpg");
+            game.load.image("titan", "img/Saturn/Moons/Titan.jpg");
+            game.load.image("dione", "img/Saturn/Moons/Dione.jpg");
+            game.load.image("enceladus", "img/Saturn/Moons/Enceladus.jpg");
+            game.load.image("rhea", "img/Saturn/Moons/Rhea.jpg");
+                                               
+            game.load.image("uranus", "img/Uranus/Uranus.jpg");
+
+            game.load.image("neptune", "img/Neptune/Neptune.jpg");
+            game.load.image("triton", "img/Neptune/Triton.jpg");
 
             game.load.image("ship", "img/Spaceship.png");
         }
 
-        var sun, mercury, venus, earth, moon, mars, deimos, phobos;
-        //Completely arbitrary rotation speed
+        var sun, 
+        mercury, 
+        venus, 
+        earth, moon, 
+        mars, deimos, phobos, 
+        jupiter, callisto, europa, ganymede, io,
+        saturn, titan, dione, enceladus, rhea,
+        uranus,
+        neptune, triton;
+        //Completely arbitrary rotation speed. TODO: Maybe pick it by some logic.
         var rotationSpeed = 0.021;
         var revolutionSpeed = 1; //TODO: Multiplier. Implemented in orbit(), maybe make a GUI to change it.
         var ship;
-
         var angle = 3 * Math.PI / 180;
+        var modAngle = 0;
+
 
         function celestialBody(sprite, spriteX, spriteY, anchorX, anchorY, revolveAround, revolutionRadius) {
+            //TODO: Optimize celestialBody. Remove need for spriteX, spriteY, anchorX, anchorY.
+            //TODO: Add "moons" parameter, so I can add moons simply by passing an object with sprites there.
+            //Panets start at different positions by changing starting angle each time one is created.
+            angleMod = (modAngle +=1);
+
             this.sprite = game.add.sprite(spriteX, spriteY, sprite);
             //Center of the sprite
             this.sprite.anchor.setTo(anchorX, anchorY);
             //Each body must have own rotAngle to have different speed.
-            this.rotAngle = angle;
+            this.rotAngle = angle + angleMod;
             //Point to revolve around, sun for planets, planet for moons.
             this.revolveAround = revolveAround;
             //We will be seen but not be heard, We are
@@ -61,7 +90,7 @@
             //TODO: Maybe add a starry space background instead of pure black
             //game.stage.backgroundColor = "#4488AA";
             //TODO: Adjust bounds
-            game.world.setBounds(0, 0, 1280, 1024);
+            game.world.setBounds(0, 0, 1500, 1500);
             
             var planetRevolutionRadius = 80;
             var moonOffset = 25;
@@ -69,6 +98,7 @@
             var centerAnchorX = 0.5;
             var centerAnchorY = 0.5;
             var baseScale = 1;
+
             var worldCenterX = game.world.centerX;
             var worldCenterY = game.world.centerY;
 
@@ -198,8 +228,35 @@
                 planetRevolutionRadius*5
             );
 
+            saturn = new celestialBody(
+                "saturn",
+                worldCenterX, worldCenterY,
+                centerAnchorX, centerAnchorY,
+                sunCenter,
+                planetRevolutionRadius*6
+            );            
+            uranus = new celestialBody(
+                "uranus",
+                worldCenterX, worldCenterY,
+                centerAnchorX, centerAnchorY,
+                sunCenter,
+                planetRevolutionRadius*7
+            );
+            neptune = new celestialBody(
+                "neptune",
+                worldCenterX, worldCenterY,
+                centerAnchorX, centerAnchorY,
+                sunCenter,
+                planetRevolutionRadius*8
+            );
+            //TODO: Jupiter has 53 moons. Make 4 always on, and 49 toggleable on (off by default).
+            //TODO: Also, make toggleable asteroid belts.
+            //TODO: Saturn also has 53 moons. Use 8 always on, and the rest toggleable.
+            //TODO: Uranus has 27 moons.
+            //TODO: Neptune has 13 moons.
+
             //TODO: Maybe remove, or make a transparent sprite for camera movement
-            ship = game.add.sprite(worldCenterX-200, worldCenterY, "ship");
+            ship = game.add.sprite(worldCenterX, worldCenterY+100, "ship");
             ship.anchor.setTo(centerAnchorX, centerAnchorY);
             game.physics.arcade.enable(ship);
             ship.body.collideWorldBounds = true;
@@ -231,6 +288,7 @@
         }
 
         function orbit(planet, orbitSpeed, orbitAround){
+            if (!planet) {return;};
 
             //If it's a moon, make it follow its planet (orbitAround).
             if (orbitAround) {
@@ -258,6 +316,10 @@
         }
 
         function update(){
+            /*TODO: Just call orbit on all celestial bodies with a loop, 
+            and have orbit() get the speed and direction of orbit from 
+            planet.orbitspeed (to add) instead of using a parameter.
+            */
             mercury.sprite.rotation += rotationSpeed;
             venus.sprite.rotation += rotationSpeed;
             earth.sprite.rotation += rotationSpeed;
@@ -275,7 +337,18 @@
             orbit(deimos, 0.42, mars);
             orbit(phobos, 0.14, mars);
 
+            //TODO: Adjust speeds
             orbit(jupiter, -0.023);
+            orbit(saturn, -0.023);
+            orbit(uranus, -0.023);
+            orbit(neptune, -.023);
+/*
+            //TODO: Orbit dynamically generated moons
+            for (var i = Things.length - 1; i >= 0; i--) {
+                Things[i]
+            }
+*/
+
 
             moveShip();
         }
