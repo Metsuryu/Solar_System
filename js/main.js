@@ -25,7 +25,7 @@
             game.load.image("callisto", "img/Jupiter/Moons/Callisto.jpg");
             game.load.image("europa", "img/Jupiter/Moons/Europa.jpg");
             game.load.image("ganymede", "img/Jupiter/Moons/Ganymede.jpg");
-            game.load.image("rhea", "img/Jupiter/Moons/Rhea.jpg");
+            game.load.image("io", "img/Jupiter/Moons/Io.jpg");
 
             game.load.image("saturn", "img/Saturn/Saturn.jpg");
             game.load.image("titan", "img/Saturn/Moons/Titan.jpg");
@@ -38,7 +38,7 @@
             game.load.image("neptune", "img/Neptune/Neptune.jpg");
             game.load.image("triton", "img/Neptune/Triton.jpg");
 
-            game.load.image("ship", "img/Spaceship.png");
+            game.load.image("ship", "img/SpaceshipAbove.png");
         }
 
         var sun, 
@@ -50,23 +50,27 @@
         saturn, titan, dione, enceladus, rhea,
         uranus,
         neptune, triton;
-        //Completely arbitrary rotation speed. TODO: Maybe pick it by some logic.
-        var rotationSpeed = 0.021;
-        var revolutionSpeed = 1; //TODO: Multiplier. Implemented in orbit(), maybe make a GUI to change it.
+
+        var rotationSpeed = 0.5; //0.5 looks best at default scale. 
+        var revolutionSpeed = 0.1; //TODO: Multiplier. Implemented in orbit(), maybe make a GUI to change it.
         var ship;
         var angle = 3 * Math.PI / 180;
         var modAngle = 0;
 
+        var worldCenterX;
+        var worldCenterY;
 
-        function celestialBody(sprite, spriteX, spriteY, anchorX, anchorY, revolveAround, revolutionRadius) {
-            //TODO: Optimize celestialBody. Remove need for spriteX, spriteY, anchorX, anchorY.
-            //TODO: Add "moons" parameter, so I can add moons simply by passing an object with sprites there.
+        function celestialBody(sprite, revolveAround, revolutionRadius) {
+            //TODO: Simplify celestialBody. 
+            /*TODO: Add "moons" parameter, so I can add moons simply by passing an object with sprites there.
+            */ 
             //Panets start at different positions by changing starting angle each time one is created.
-            angleMod = (modAngle +=1);
+            var angleMod = (modAngle +=1);
 
-            this.sprite = game.add.sprite(spriteX, spriteY, sprite);
+            this.sprite = game.add.sprite(worldCenterX, worldCenterY, sprite);
             //Center of the sprite
-            this.sprite.anchor.setTo(anchorX, anchorY);
+            var centerAnchor = 0.5;
+            this.sprite.anchor.setTo(centerAnchor, centerAnchor);
             //Each body must have own rotAngle to have different speed.
             this.rotAngle = angle + angleMod;
             //Point to revolve around, sun for planets, planet for moons.
@@ -92,6 +96,9 @@
             //TODO: Adjust bounds
             game.world.setBounds(0, 0, 1500, 1500);
             
+            worldCenterX = game.world.centerX;
+            worldCenterY = game.world.centerY;
+
             var planetRevolutionRadius = 80;
             var moonOffset = 25;
             var nthMoonOffset = 1.55;
@@ -99,15 +106,8 @@
             var centerAnchorY = 0.5;
             var baseScale = 1;
 
-            var worldCenterX = game.world.centerX;
-            var worldCenterY = game.world.centerY;
-
-            sun = new celestialBody(
-                "sun",
-                worldCenterX, worldCenterY,
-                centerAnchorX, centerAnchorY
-                //The sun doesn't need other parameters
-            );
+            //The sun doesn't need other parameters
+            sun = new celestialBody("sun");
 
             var sunX = sun.sprite.position.x;
             var sunY = sun.sprite.position.y;
@@ -115,8 +115,6 @@
 
             mercury = new celestialBody(
                 "mercury",
-                worldCenterX, worldCenterY,
-                centerAnchorX, centerAnchorY,
                 sunCenter,
                 planetRevolutionRadius
             );
@@ -129,8 +127,6 @@
 
             venus = new celestialBody(
                 "venus",
-                worldCenterX, worldCenterY,
-                centerAnchorX, centerAnchorY,
                 sunCenter,
                 planetRevolutionRadius*2
             );
@@ -143,8 +139,6 @@
 
             earth = new celestialBody(
                 "earth",
-                worldCenterX, worldCenterY,
-                centerAnchorX, centerAnchorY,
                 sunCenter,
                 planetRevolutionRadius*3
             );
@@ -153,8 +147,6 @@
 
             moon = new celestialBody(
                 "moon",
-                earth.sprite.position.x, worldCenterY,
-                centerAnchorX, centerAnchorY,
                 earthCenter,
                 moonOffset
             );
@@ -177,40 +169,35 @@
 
             mars = new celestialBody(
                 "mars",
-                worldCenterX, worldCenterY,
-                centerAnchorX, centerAnchorY,
                 sunCenter,
                 planetRevolutionRadius*4
             );
             var marsCenter = {"x": mars.sprite.position.x, "y": mars.sprite.position.y };
-            deimos = new celestialBody(
-                "deimos",
-                mars.sprite.position.x, worldCenterY,
-                centerAnchorX, centerAnchorY,
-                marsCenter,
-                moonOffset
-            );
-            var deimosShadowAlpha = 0.15;
-            var deimosShadowScaleY = 0.2;
-            deimos.addShadow(
-                mars.sprite.position.x, worldCenterY,
-                deimosShadowAlpha,
-                baseScale, deimosShadowScaleY
-            );
             phobos = new celestialBody(
                 "phobos",
-                mars.sprite.position.x, worldCenterY,
-                centerAnchorX, centerAnchorY,
                 marsCenter,
-                moonOffset*nthMoonOffset
+                moonOffset
             );
             var phobosShadowAlpha = 0.15;
             var phobosShadowScaleY = 0.2;
             phobos.addShadow(
-                mars.sprite.position.x, worldCenterY,
+                worldCenterX, worldCenterY,
                 phobosShadowAlpha,
                 baseScale, phobosShadowScaleY
             );
+            deimos = new celestialBody(
+                "deimos",
+                marsCenter,
+                moonOffset*nthMoonOffset
+            );
+            var deimosShadowAlpha = 0.15;
+            var deimosShadowScaleY = 0.2;
+            deimos.addShadow(
+                worldCenterX, worldCenterY,
+                deimosShadowAlpha,
+                baseScale, deimosShadowScaleY
+            );
+
             var marsShadowAlpha = 0.2;
             var marsShadowScaleX = 0.8;
             mars.addShadow(
@@ -222,30 +209,22 @@
 
             jupiter = new celestialBody(
                 "jupiter",
-                worldCenterX, worldCenterY,
-                centerAnchorX, centerAnchorY,
                 sunCenter,
                 planetRevolutionRadius*5
             );
 
             saturn = new celestialBody(
                 "saturn",
-                worldCenterX, worldCenterY,
-                centerAnchorX, centerAnchorY,
                 sunCenter,
                 planetRevolutionRadius*6
             );            
             uranus = new celestialBody(
                 "uranus",
-                worldCenterX, worldCenterY,
-                centerAnchorX, centerAnchorY,
                 sunCenter,
                 planetRevolutionRadius*7
             );
             neptune = new celestialBody(
                 "neptune",
-                worldCenterX, worldCenterY,
-                centerAnchorX, centerAnchorY,
                 sunCenter,
                 planetRevolutionRadius*8
             );
@@ -269,27 +248,28 @@
             ship.body.velocity.y = 0;
             if (cursors.up.isDown)
             {
+                ship.angle = 0;
                 ship.body.velocity.y = -350;
             }
             else if (cursors.down.isDown)
             {
+                ship.angle = 180;
                 ship.body.velocity.y = 350;
             }
             if (cursors.left.isDown)
             {
-                //ship.angle = 180; //Ship gets mirrored, maybe make a ship that's symmetric to avoid this.
+                ship.angle = 270;                
                 ship.body.velocity.x = -350;
             }
             else if (cursors.right.isDown)
             {
-                //ship.angle = 0;
+                ship.angle = 90;
                 ship.body.velocity.x = 350;
             }
         }
 
         function orbit(planet, orbitSpeed, orbitAround){
             if (!planet) {return;};
-
             //If it's a moon, make it follow its planet (orbitAround).
             if (orbitAround) {
                 planet.revolveAround = {"x": orbitAround.sprite.position.x, "y": orbitAround.sprite.position.y };
@@ -306,7 +286,7 @@
 
             orbitSpeed = orbitSpeed*revolutionSpeed;
             // increase the angle of rotation at each frame
-            planet.rotAngle += (3 * Math.PI / 180)*orbitSpeed;
+            planet.rotAngle += (3 * Math.PI / 180)/orbitSpeed;
            
             var newX = planet.revolveAround.x + planet.revolutionRadius * Math.cos(planet.rotAngle);
             var newY = planet.revolveAround.y + planet.revolutionRadius * Math.sin(planet.rotAngle);
@@ -316,32 +296,36 @@
         }
 
         function update(){
+            //All rotation and revolution numbers are to scale (except where specified otherwise.)
+
             /*TODO: Just call orbit on all celestial bodies with a loop, 
             and have orbit() get the speed and direction of orbit from 
             planet.orbitspeed (to add) instead of using a parameter.
             */
-            mercury.sprite.rotation += rotationSpeed;
-            venus.sprite.rotation += rotationSpeed;
-            earth.sprite.rotation += rotationSpeed;
-            mars.sprite.rotation += rotationSpeed;
+            //The magic number is the lenght of the day in hours on each planet.
+            mercury.sprite.rotation += rotationSpeed/1407;
+            venus.sprite.rotation += rotationSpeed/2802;
+            earth.sprite.rotation += rotationSpeed/24;
+            mars.sprite.rotation += rotationSpeed/24.6;
 
-            //TODO: Calculate speeds of new planets based on year lenght.
-            orbit(mercury, -0.21);
-            orbit(venus, -0.11);
+            //Revolution speeds of planets based on year lenght on earth.
+            //The magic number is the number of earth days to complete a revolution.
+            orbit(mercury, -88);
+            orbit(venus, -224);
 
-            orbit(earth, -0.1);
-            orbit(moon, 0.3, earth);
+            orbit(earth, -365);
+            orbit(moon, 27, earth);
 
             //Mars's year is about twice as long as Earth's year.
-            orbit(mars, -0.053);
-            orbit(deimos, 0.42, mars);
-            orbit(phobos, 0.14, mars);
+            orbit(mars, -687);
+            //Mars moons are 20 times faster, but I slowed them down to make it look better ad default speed.
+            orbit(deimos, 25, mars);
+            orbit(phobos, 6, mars);
 
-            //TODO: Adjust speeds
-            orbit(jupiter, -0.023);
-            orbit(saturn, -0.023);
-            orbit(uranus, -0.023);
-            orbit(neptune, -.023);
+            orbit(jupiter, -4332);
+            orbit(saturn, -10759);
+            orbit(uranus, -30688);
+            orbit(neptune, -60182);
 /*
             //TODO: Orbit dynamically generated moons
             for (var i = Things.length - 1; i >= 0; i--) {
