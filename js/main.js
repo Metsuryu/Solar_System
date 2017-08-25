@@ -51,7 +51,7 @@ $( document ).ready(function() {
                 var newMoon = partial+numerical;
                 moreMoons.push(newMoon);
             };
-
+            //TODO: Adjust/randomize starting angle to make them look more natural.
             for (var i = moreMoons.length - 1; i >= 0; i--) {
                 /*
                 TODO: Randomize offset. Also add revolution speed to moon object directly, and call it
@@ -271,7 +271,7 @@ $( document ).ready(function() {
 
         function orbitDynamicalBodies(bodiesArray, planetToOrbit){
             for (var i = bodiesArray.length - 1; i >= 0; i--) {
-                var randSpeed = randomInt(10,20);
+                var randSpeed = randomInt(10, 20);
                 /*TODO: Instead of generating a random speed here, 
                 use bodiesArray[i].revolutionSpeed after implemented
                 and generate it there for better performance.
