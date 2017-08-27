@@ -1,6 +1,6 @@
 $( document ).ready(function() {
         //TODO: Find best size after GUI is done
-        var sWidth = window.innerWidth -10;
+        var sWidth = window.innerWidth -20;
         var sHeight = window.innerHeight -100; 
 
         var game = new Phaser.Game(sWidth, sHeight, Phaser.AUTO, "canvas", 
@@ -41,25 +41,19 @@ $( document ).ready(function() {
             game.load.image("ship", "img/SpaceshipAbove.png");
         }
 
-        function addMoons(){
-            //TODO: Adds moons for jupiter only for now. Needs to be generalized
+        function addAllMoons(){
+            addMoons(49, jupiterCenter);
+        }
 
-            for (var i = 0; i < 49; i++) {
-                //TODO: Randomize the sprite of dynamically generated moon from ones available.
-                var partial = "moon";
-                var numerical = i.toString();
-                var newMoon = partial+numerical;
-                moreMoons.push(newMoon);
+        function addMoons(quantity, planet){
+            for (var i = 0; i < quantity; i++) {
+                //Randomize the sprite of dynamically generated moon from ones available.
+                var randSpeed = randomInt(10, 20);
+                var randomOffset = moonOffset*nthMoonOffset+i * Math.random();
+                var moonsSprites = ["moon", "deimos", "phobos", "callisto", "europa", "ganymede"];
+                var randomMoon = moonsSprites[ randomInt(0, moonsSprites.length) ];
+                moreMoons.push(new celestialBody(randomMoon, planet, randomOffset, -randSpeed) );
             };
-            //TODO: Adjust/randomize starting angle to make them look more natural.
-            for (var i = moreMoons.length - 1; i >= 0; i--) {
-                /*
-                TODO: Randomize offset. Also add revolution speed to moon object directly, and call it
-                 in orbit() with moon.revolutionSpeed 
-                */ //Maybe do nthMoonOffset+i*Math.random()
-
-                moreMoons[i] = new celestialBody("moon", jupiterCenter, moonOffset*nthMoonOffset+i );
-            }
         };
 
         var sun, 
@@ -89,7 +83,7 @@ $( document ).ready(function() {
 
         var jupiterCenter;
 
-        function celestialBody(sprite, revolveAround, revolutionRadius) {
+        function celestialBody(sprite, revolveAround, revolutionRadius, revSpeed) {
             //TODO: Simplify celestialBody. 
             /*TODO: Add "moons" parameter, so I can add moons simply by passing an object with sprites there.
             */ 
@@ -108,6 +102,7 @@ $( document ).ready(function() {
             this.revolutionRadius = revolutionRadius; //TODO: Find programmatically based on distance
             //Shadow. Attach to planet after moon are created, so it can cover them.
             this.shadow;
+            this.revolutionSpeed = revSpeed;
         }
         celestialBody.prototype.addShadow = function(alpha, scaleX, scaleY){
             if (!scaleX) {scaleX = baseScale};
@@ -239,7 +234,7 @@ $( document ).ready(function() {
             }
         }
         function randomInt(min, max) {
-            return Math.random() * (max - min) + min;
+            return Math.floor((Math.random() * max) + min);
         }
 
         function orbit(planet, orbitSpeed, orbitAround){
@@ -271,12 +266,7 @@ $( document ).ready(function() {
 
         function orbitDynamicalBodies(bodiesArray, planetToOrbit){
             for (var i = bodiesArray.length - 1; i >= 0; i--) {
-                var randSpeed = randomInt(10, 20);
-                /*TODO: Instead of generating a random speed here, 
-                use bodiesArray[i].revolutionSpeed after implemented
-                and generate it there for better performance.
-                */
-                orbit(bodiesArray[i], randSpeed, planetToOrbit);
+                orbit(bodiesArray[i], bodiesArray[i].revolutionSpeed, planetToOrbit);
             }
         }
 
@@ -308,6 +298,7 @@ $( document ).ready(function() {
                 orbit(deimos, 25, mars);
                 orbit(phobos, 6, mars);
 
+            //I don't know the revolution direction of Jupiter's moons, this was just an aesthetic decision.
             orbit(jupiter, -4332);
                 orbit(callisto, -11, jupiter);
                 orbit(europa, 23, jupiter);
@@ -336,6 +327,6 @@ $( document ).ready(function() {
         }
 
         //TODO: Make it a toggle, to add or remove extra moons.
-        $("#addMoonsBTN").click(addMoons);
+        $("#addMoonsBTN").click(addAllMoons);
     
 });
