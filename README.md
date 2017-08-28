@@ -9,5 +9,3 @@ A small Solar system all planets, and some moons, animated with Phaser.js.
 #TODOs for now:
 
 - Make site look nicer
-
-- Add the other celestial objects.

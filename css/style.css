@@ -12,3 +12,10 @@ body {
 	background-color: #222; /*TODO: Maybe make black*/
 	color: #cccccc;
 }
+
+.optionsBox{
+	float: right;
+	border:2px solid black;
+	padding: 0.1em;
+	margin: 0.1em;
+}
