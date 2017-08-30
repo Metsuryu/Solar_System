@@ -40,6 +40,7 @@ $( document ).ready(function() {
             game.load.image("triton", "img/Neptune/Triton.jpg");
 
             game.load.image("ship", "img/SpaceshipAbove.png");
+            game.load.image("particle", "img/particle.jpg");
         }
 
         function toggleAllMoons(){
@@ -92,7 +93,7 @@ $( document ).ready(function() {
 
         var rotationSpeed = 0.5; //0.5 looks best at default scale. 
         var revolutionSpeed = 15; //Global multiplier. Implemented in orbit(), can be changed in GUI.
-        var ship;
+        var ship, emitter;
         var angle = 3 * Math.PI / 180;
         var modAngle = 0;
 
@@ -199,32 +200,58 @@ $( document ).ready(function() {
             ship.body.collideWorldBounds = true;
             cursors = game.input.keyboard.createCursorKeys();
             game.camera.follow(ship);
+
+            //Engine particles emitter
+            emitter = game.add.emitter(worldCenterX, worldCenterY+100, 200);
+            //Width and height of the ship's engine.
+            emitter.width = 10;
+            emitter.height = 10;
+            emitter.particleSpeed = 200;
+            emitter.makeParticles("particle");
+            emitter.minParticleSpeed.set(0, emitter.particleSpeed);
+            emitter.maxParticleSpeed.set(0, emitter.particleSpeed);
+            emitter.gravity = 0;
+            emitter.start(false, 300, 10);
         }
-
-
 
         function moveShip(){
             ship.body.velocity.x = 0;
             ship.body.velocity.y = 0;
+
+            emitter.emitY = ship.y;
+            emitter.emitX = ship.x;
+
             if (cursors.up.isDown)
             {
                 ship.angle = 0;
                 ship.body.velocity.y = -350;
+
+                emitter.minParticleSpeed.set(0, emitter.particleSpeed);
+                emitter.maxParticleSpeed.set(0, emitter.particleSpeed);
             }
             else if (cursors.down.isDown)
             {
                 ship.angle = 180;
                 ship.body.velocity.y = 350;
+
+                emitter.minParticleSpeed.set(0, -emitter.particleSpeed);
+                emitter.maxParticleSpeed.set(0, -emitter.particleSpeed);
             }
             if (cursors.left.isDown)
             {
                 ship.angle = 270;                
-                ship.body.velocity.x = -350;
+                ship.body.velocity.x = -350; 
+
+                emitter.minParticleSpeed.set(emitter.particleSpeed, 0);
+                emitter.maxParticleSpeed.set(emitter.particleSpeed, 0);          
             }
             else if (cursors.right.isDown)
             {
                 ship.angle = 90;
                 ship.body.velocity.x = 350;
+
+                emitter.minParticleSpeed.set(-emitter.particleSpeed, 0);
+                emitter.maxParticleSpeed.set(-emitter.particleSpeed, 0); 
             }
         }
         function randomInt(min, max) {
