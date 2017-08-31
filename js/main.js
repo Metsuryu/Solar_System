@@ -298,6 +298,7 @@ $( document ).ready(function() {
 
         function update(){
             //All rotation and revolution numbers are to scale (except where specified otherwise.)
+            //I don't know the revolution direction of the moons, this was just an aesthetic decision.
 
             /*TODO: Maybe just call orbit on all celestial bodies with a loop, 
             and have orbit() get the speed and direction of orbit from 
@@ -309,7 +310,7 @@ $( document ).ready(function() {
             earth.sprite.rotation += rotationSpeed/24;
             mars.sprite.rotation += rotationSpeed/24.6;
 
-            //Revolution speeds of planets based on year length on earth.
+            //Revolution speeds of planets based on one year length on earth.
             //The magic number is the number of earth days to complete a revolution.
 
             orbit(mercury, -88);
@@ -320,21 +321,18 @@ $( document ).ready(function() {
 
             //Mars's year is about twice as long as Earth's year.
             orbit(mars, -687);
-            //Mars moons are 20 times faster, but I slowed them down to make it look better ad default speed.
+            //Mars moons are about 20 times faster, but I slowed them down to make it look better ad default speed.
                 orbit(deimos, 25, mars);
                 orbit(phobos, 6, mars);
-
-            //I don't know the revolution direction of Jupiter's moons, this was just an aesthetic decision.
+            
             orbit(jupiter, -4332);
                 orbit(callisto, -11, jupiter);
                 orbit(europa, 23, jupiter);
                 orbit(ganymede, -19, jupiter);
                 orbit(io, 15, jupiter);
-                //TODO: Add the rest of the moons here, and to the other planets.
                 orbitDynamicalBodies(jupiter);
 
             orbit(saturn, -10759);
-            /*titan, dione, enceladus, rhea*/
                 orbit(titan, -11, saturn);
                 orbit(dione, 23, saturn);
                 orbit(enceladus, -19, saturn);
@@ -351,7 +349,6 @@ $( document ).ready(function() {
             moveShip();
         }
 
-        //TODO: Make it a toggle, to add or remove extra moons.
         $("#toggleMoons").click(toggleAllMoons);
 
         $("#revolutionSpeed").change(function() {
