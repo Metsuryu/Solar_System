@@ -1,12 +1,56 @@
 $( document ).ready(function() {
-    //TODO: Find best size after GUI is done
-    var consts = {
-        //TODO: Put all constants and magic numbers here.
-    };
-    var sWidth = window.innerWidth -20;
-    var sHeight = window.innerHeight -100; 
 
-    var game = new Phaser.Game(sWidth, sHeight, Phaser.AUTO, "canvas", 
+    var sun, 
+    mercury, 
+    venus, 
+    earth, moon, 
+    mars, deimos, phobos, 
+    jupiter, callisto, europa, ganymede, io,
+    saturn, titan, dione, enceladus, rhea,
+    uranus,
+    neptune, triton,
+    ship, emitter;
+
+    var planetRevolutionRadius = 80;
+
+    //Constants namespace
+    var consts = {
+        //TODO: Find best size after GUI is done
+        "sWidth": window.innerWidth -20,
+        "sHeight": window.innerHeight -100,
+        "worldCenterX": 0,
+        "worldCenterY": 0,
+        "rotationSpeed": 0.5, //0.5 looks best at default scale. 
+        "revolutionSpeed": 15, //Global multiplier. Implemented in orbit(), can be changed in GUI.
+        "angle": 3 * Math.PI / 180,
+        "modAngle": 0,
+        "baseScale": 1,
+        "moonOffset": 25,
+        "nthMoonOffset": 1.55,
+
+        revolutionRadius: {
+            "mercury": planetRevolutionRadius,
+            "venus": planetRevolutionRadius*2,
+            "earth": planetRevolutionRadius*3,
+            "mars": planetRevolutionRadius*4,
+            "jupiter": planetRevolutionRadius*5,
+            "saturn": planetRevolutionRadius*6,
+            "uranus": planetRevolutionRadius*7,
+            "neptune": planetRevolutionRadius*8
+        },
+        ship: {
+            direction: {
+                "up": 0,
+                "down": 180,
+                "left": 270,
+                "right": 90
+            },
+            "speed": 350
+        }
+    };
+
+
+    var game = new Phaser.Game(consts.sWidth, consts.sHeight, Phaser.AUTO, "canvas", 
         { preload: preload, create: create, update: update });
 
     function preload(){
@@ -46,16 +90,15 @@ $( document ).ready(function() {
     }
 
     function toggleAllMoons(){
-        //Jupiter has 53 moons. 4 always on, 49 toggleable.
-        //Saturn also has 53 moons, 4 always on.
-        //Uranus has 27 moons, 0 default.
-        //Neptune has 13 moons, 1 always on.
         if($("#toggleMoons").is(':checked')){
+            //Jupiter has 53 moons. 4 always on, 49 toggleable.
             addMoons(49, jupiter);
+            //Saturn also has 53 moons, 4 always on.
             addMoons(49, saturn);
+            //Uranus has 27 moons, 0 default.
             addMoons(27, uranus);
+            //Neptune has 13 moons, 1 always on.
             addMoons(12, neptune);
-
         }else{
             removeMoons(jupiter);
             removeMoons(saturn);
@@ -78,45 +121,21 @@ $( document ).ready(function() {
             var randomMoon = moonsSprites[ randomInt(0, moonsSprites.length) ];
             //Random speed and offset
             var randSpeed = randomInt(10, 20);
-            var randomOffset = moonOffset*nthMoonOffset+i * Math.random();
+            var randomOffset = consts.moonOffset*consts.nthMoonOffset+i * Math.random();
             planet.moons.push(new celestialBody(randomMoon, planet.center, randomOffset, -randSpeed) );
         };
     };
 
-    var sun, 
-    mercury, 
-    venus, 
-    earth, moon, 
-    mars, deimos, phobos, 
-    jupiter, callisto, europa, ganymede, io,
-    saturn, titan, dione, enceladus, rhea,
-    uranus,
-    neptune, triton;
-
-    var rotationSpeed = 0.5; //0.5 looks best at default scale. 
-    var revolutionSpeed = 15; //Global multiplier. Implemented in orbit(), can be changed in GUI.
-    var ship, emitter;
-    var angle = 3 * Math.PI / 180;
-    var modAngle = 0;
-
-    var baseScale = 1;
-    var worldCenterX;
-    var worldCenterY;
-    var planetRevolutionRadius = 80;
-    var moonOffset = 25;
-    var nthMoonOffset = 1.55;
-
-    var jupiterCenter;
 
     function celestialBody(sprite, revolveAround, revolutionRadius, revSpeed) {
         //Panets start at different positions by changing starting angle each time one is created.
-        var angleMod = (modAngle +=1);
-        this.sprite = game.add.sprite(worldCenterX, worldCenterY, sprite);
+        var angleMod = (consts.modAngle +=1);
+        this.sprite = game.add.sprite(consts.worldCenterX, consts.worldCenterY, sprite);
         //Center of the sprite
         var centerAnchor = 0.5;
         this.sprite.anchor.setTo(centerAnchor, centerAnchor);
         //Each body must have own rotAngle to have different speed.
-        this.rotAngle = angle + angleMod;
+        this.rotAngle = consts.angle + angleMod;
         //Point to revolve around, sun for planets, planet for moons.
         this.revolveAround = revolveAround;
         //We will be seen but not be heard, We are
@@ -129,14 +148,18 @@ $( document ).ready(function() {
     }
     celestialBody.prototype.addShadow = function(alpha, scaleX, scaleY){
         //If not specified, the shadow is roughly the size of earth.
-        if (!scaleX) {scaleX = baseScale};
-        if (!scaleY) {scaleY = baseScale};
-        this.shadow = game.add.sprite(worldCenterX, worldCenterY, "shadow");
+        if (!scaleX) {scaleX = consts.baseScale};
+        if (!scaleY) {scaleY = consts.baseScale};
+        this.shadow = game.add.sprite(consts.orldCenterX, consts.worldCenterY, "shadow");
         //Anchor must be 1, 0.5 to cover half of the body.
         this.shadow.anchor.setTo(1, 0.5);
         //Shadow's transparency
         this.shadow.alpha = alpha;
         this.shadow.scale.setTo(scaleX,scaleY);
+    }
+
+    function nthMoon(n){
+        return consts.moonOffset*consts.nthMoonOffset*n;
     }
 
     function create(){
@@ -145,66 +168,70 @@ $( document ).ready(function() {
         //game.stage.backgroundColor = "#4488AA";
         //TODO: Adjust bounds
         game.world.setBounds(0, 0, 1500, 1500);            
-        worldCenterX = game.world.centerX;
-        worldCenterY = game.world.centerY;
+        consts.worldCenterX = game.world.centerX;
+        consts.worldCenterY = game.world.centerY;
 
         //The sun doesn't need other parameters
         sun = new celestialBody("sun");
         var sunCenter = {"x": sun.sprite.position.x, "y": sun.sprite.position.y};
 
-        mercury = new celestialBody("mercury", sunCenter, planetRevolutionRadius);
+        mercury = new celestialBody("mercury", sunCenter, consts.revolutionRadius.mercury);
         mercury.addShadow(0.5);
 
-        venus = new celestialBody("venus", sunCenter, planetRevolutionRadius*2);
+        venus = new celestialBody("venus", sunCenter, consts.revolutionRadius.venus);
         venus.addShadow(0.5);
 
-        earth = new celestialBody("earth", sunCenter,planetRevolutionRadius*3);
+        earth = new celestialBody("earth", sunCenter, consts.revolutionRadius.earth);
         var earthCenter = {"x": earth.sprite.position.x, "y": earth.sprite.position.y};
 
-        moon = new celestialBody("moon", earthCenter, moonOffset);
-        moon.addShadow(0.3, baseScale, 0.2);
+        moon = new celestialBody("moon", earthCenter, consts.moonOffset);
+        moon.addShadow(0.3, consts.baseScale, 0.2);
         //Earth's shadow is after the moon, since it has to cover it.
         earth.addShadow(0.4);
 
-        mars = new celestialBody("mars", sunCenter, planetRevolutionRadius*4);
+        mars = new celestialBody("mars", sunCenter, consts.revolutionRadius.mars);
         var marsCenter = {"x": mars.sprite.position.x, "y": mars.sprite.position.y};
-        phobos = new celestialBody("phobos", marsCenter, moonOffset);
-        phobos.addShadow(0.15, baseScale, 0.2);
-        deimos = new celestialBody("deimos", marsCenter, moonOffset*nthMoonOffset);
-        deimos.addShadow(0.15, baseScale, 0.2);
-        mars.addShadow(0.2, 0.8, baseScale);
+        phobos = new celestialBody("phobos", marsCenter, consts.moonOffset);
+        phobos.addShadow(0.15, consts.baseScale, 0.2);
+        deimos = new celestialBody("deimos", marsCenter, nthMoon(1));
+        deimos.addShadow(0.15, consts.baseScale, 0.2);
+        mars.addShadow(0.2, 0.8, consts.baseScale);
 
         /*Gas giants without shadow, style choice.*/
-        jupiter = new celestialBody("jupiter", sunCenter, planetRevolutionRadius*5);
+        jupiter = new celestialBody("jupiter", sunCenter, consts.revolutionRadius.jupiter);
         jupiter.center = {"x": jupiter.sprite.position.x, "y": jupiter.sprite.position.y};
-        callisto = new celestialBody("callisto", jupiter.center, moonOffset*nthMoonOffset*0.9);
-        europa = new celestialBody("europa", jupiter.center, moonOffset*nthMoonOffset*1.1);
-        ganymede = new celestialBody("ganymede", jupiter.center, moonOffset*nthMoonOffset*1.2);
-        io = new celestialBody("io", jupiter.center, moonOffset*nthMoonOffset*1.3);
+        callisto = new celestialBody("callisto", jupiter.center, nthMoon(0.9) );
+        europa = new celestialBody("europa", jupiter.center, nthMoon(1.1) );
+        ganymede = new celestialBody("ganymede", jupiter.center, nthMoon(1.2) );
+        io = new celestialBody("io", jupiter.center, nthMoon(1.3) );
 
-        saturn = new celestialBody("saturn", sunCenter, planetRevolutionRadius*6);
+        saturn = new celestialBody("saturn", sunCenter, consts.revolutionRadius.saturn);
         var saturnCenter = {"x": saturn.sprite.position.x, "y": saturn.sprite.position.y};
-        titan = new celestialBody("titan", saturnCenter, moonOffset*nthMoonOffset*0.9);
-        dione = new celestialBody("dione", saturnCenter, moonOffset*nthMoonOffset*1.1);
-        enceladus = new celestialBody("enceladus", saturnCenter, moonOffset*nthMoonOffset*1.2);
-        rhea = new celestialBody("rhea", saturnCenter, moonOffset*nthMoonOffset*1.3);
+        titan = new celestialBody("titan", saturnCenter, nthMoon(0.9) );
+        dione = new celestialBody("dione", saturnCenter, nthMoon(1.1) );
+        enceladus = new celestialBody("enceladus", saturnCenter, nthMoon(1.2) );
+        rhea = new celestialBody("rhea", saturnCenter, nthMoon(1.3) );
 
-        uranus = new celestialBody("uranus", sunCenter, planetRevolutionRadius*7);
+        uranus = new celestialBody("uranus", sunCenter, consts.revolutionRadius.uranus);
 
-        neptune = new celestialBody("neptune", sunCenter, planetRevolutionRadius*8);
-        var neptuneCenter = {"x": saturn.sprite.position.x, "y": saturn.sprite.position.y};
-        triton = new celestialBody("triton", neptuneCenter, moonOffset);
+        neptune = new celestialBody("neptune", sunCenter, consts.revolutionRadius.neptune);
+        var neptuneCenter = {"x": neptune.sprite.position.x, "y": neptune.sprite.position.y};
+        triton = new celestialBody("triton", neptuneCenter, consts.moonOffset);
 
-        //TODO: Maybe remove, or make a transparent sprite for camera movement
-        ship = game.add.sprite(worldCenterX, worldCenterY+100, "ship");
-        ship.anchor.setTo(0.5, 0.5);
-        game.physics.arcade.enable(ship);
+        //Ship
+        //TODO: Maybe add directional arrows image to show the ship can move.
+        var shipStartX = consts.worldCenterX;
+        var shipStartY = consts.worldCenterY+100;
+        ship = game.add.sprite(shipStartX, shipStartY, "ship"); //Arbitrary position near center.
+        ship.anchor.setTo(0.5, 0.5); //Ship is moved from its center.
+        game.physics.arcade.enable(ship); //Physics needed to enable collision with world bounds.
         ship.body.collideWorldBounds = true;
         cursors = game.input.keyboard.createCursorKeys();
         game.camera.follow(ship);
 
-        //Engine particles emitter
-        emitter = game.add.emitter(worldCenterX, worldCenterY+100, 200);
+        //Engine particles emitter.
+        var particlesDensity = 200;
+        emitter = game.add.emitter(shipStartX, shipStartY, particlesDensity);
         //Width and height of the ship's engine.
         emitter.width = 10;
         emitter.height = 10;
@@ -213,7 +240,9 @@ $( document ).ready(function() {
         emitter.minParticleSpeed.set(0, emitter.particleSpeed);
         emitter.maxParticleSpeed.set(0, emitter.particleSpeed);
         emitter.gravity = 0;
-        emitter.start(false, 300, 10);
+        var trailX = 300;
+        var trailY = 10;
+        emitter.start(false, trailX, trailY);
     }
 
     function moveShip(){
@@ -225,32 +254,32 @@ $( document ).ready(function() {
 
         if (cursors.up.isDown)
         {
-            ship.angle = 0;
-            ship.body.velocity.y = -350;
+            ship.angle = consts.ship.direction.up;
+            ship.body.velocity.y = -consts.ship.speed;
 
             emitter.minParticleSpeed.set(0, emitter.particleSpeed);
             emitter.maxParticleSpeed.set(0, emitter.particleSpeed);
         }
         else if (cursors.down.isDown)
         {
-            ship.angle = 180;
-            ship.body.velocity.y = 350;
+            ship.angle = consts.ship.direction.down;
+            ship.body.velocity.y = consts.ship.speed;
 
             emitter.minParticleSpeed.set(0, -emitter.particleSpeed);
             emitter.maxParticleSpeed.set(0, -emitter.particleSpeed);
         }
         if (cursors.left.isDown)
         {
-            ship.angle = 270;                
-            ship.body.velocity.x = -350; 
+            ship.angle = consts.ship.direction.left;                
+            ship.body.velocity.x = -consts.ship.speed; 
 
             emitter.minParticleSpeed.set(emitter.particleSpeed, 0);
             emitter.maxParticleSpeed.set(emitter.particleSpeed, 0);          
         }
         else if (cursors.right.isDown)
         {
-            ship.angle = 90;
-            ship.body.velocity.x = 350;
+            ship.angle = consts.ship.direction.right;
+            ship.body.velocity.x = consts.ship.speed;
 
             emitter.minParticleSpeed.set(-emitter.particleSpeed, 0);
             emitter.maxParticleSpeed.set(-emitter.particleSpeed, 0); 
@@ -278,7 +307,7 @@ $( document ).ready(function() {
         /*daysToOrbitSun is the base revolution speed of the planets, and it is multiplied by the gloabl
         revolutionSpeed to get the actual speed.
         A higher value means a slower speed.*/
-        daysToOrbitSun = daysToOrbitSun/revolutionSpeed;
+        daysToOrbitSun = daysToOrbitSun/consts.revolutionSpeed;
         // increase the angle of rotation at each frame
         planet.rotAngle += (3 * Math.PI / 180)/daysToOrbitSun;
 
@@ -299,21 +328,17 @@ $( document ).ready(function() {
     }
 
     function update(){
-        //All rotation and revolution numbers are to scale (except where specified otherwise.)
+        //Rotation and revolution numbers are to scale, except where specified otherwise.
         //I don't know the revolution direction of the moons, this was just an aesthetic decision.
 
-        /*TODO: Maybe just call orbit on all celestial bodies with a loop, 
-        and have orbit() get the speed and direction of orbit from 
-        planet.orbitspeed (to add) instead of using a parameter.*/
-        //The magic number is the length of the day in hours on each planet.
-        mercury.sprite.rotation += rotationSpeed/1407;
-        venus.sprite.rotation += rotationSpeed/2802;
-        earth.sprite.rotation += rotationSpeed/24;
-        mars.sprite.rotation += rotationSpeed/24.6;
+        //Rotation speed is divided by the length of the day in hours on each planet.
+        mercury.sprite.rotation += consts.rotationSpeed / 1407;
+        venus.sprite.rotation += consts.rotationSpeed / 2802;
+        earth.sprite.rotation += consts.rotationSpeed / 24;
+        mars.sprite.rotation += consts.rotationSpeed / 24.6;
 
         //Revolution speeds of planets based on one year length on earth.
-        //The magic number is the number of earth days to complete a revolution.
-
+        //The magic numbers are the number of earth days to complete a revolution.
         orbit(mercury, -88);
         orbit(venus, -224);
 
@@ -353,6 +378,6 @@ $( document ).ready(function() {
     $("#toggleMoons").click(toggleAllMoons);
 
     $("#revolutionSpeed").change(function() {
-        revolutionSpeed = $('#revolutionSpeed').val();
+        consts.revolutionSpeed = $('#revolutionSpeed').val();
     });
 });
