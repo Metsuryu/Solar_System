@@ -11,13 +11,14 @@ $( document ).ready(function() {
     neptune, triton,
     ship, emitter;
 
-    var planetRevolutionRadius = 80;
-
     //Constants namespace
+    var planetRevolutionRadius = 80;
     var consts = {
         //TODO: Find best size after GUI is done
         "sWidth": window.innerWidth -20,
-        "sHeight": window.innerHeight -100,
+        "sHeight": window.innerHeight -200,
+        "worldSizeX": 1500,
+        "worldSizeY": 1500,
         "worldCenterX": 0,
         "worldCenterY": 0,
         "rotationSpeed": 0.5, //0.5 looks best at default scale. 
@@ -54,7 +55,7 @@ $( document ).ready(function() {
         { preload: preload, create: create, update: update });
 
     function preload(){
-
+        game.load.image("space", "img/background.jpg");
         game.load.image("sun", "img/Sun.jpg");
         game.load.image("shadow", "img/Shadow.png");
 
@@ -164,10 +165,8 @@ $( document ).ready(function() {
 
     function create(){
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        //TODO: Maybe add a starry space background instead of pure black
-        //game.stage.backgroundColor = "#4488AA";
-        //TODO: Adjust bounds
-        game.world.setBounds(0, 0, 1500, 1500);            
+        game.add.tileSprite(0, 0, consts.worldSizeX, consts.worldSizeY, "space");
+        game.world.setBounds(0, 0, consts.worldSizeX, consts.worldSizeY);            
         consts.worldCenterX = game.world.centerX;
         consts.worldCenterY = game.world.centerY;
 
