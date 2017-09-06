@@ -2,10 +2,10 @@
 Here it is:
 http://solsys.co.nf/
 
-I'm currently remaking it in Phaser.js from the old version that was pure Canvas.
+A small Solar system all planets and moons orbiting the Sun.
 
-A small Solar system all planets, and some moons, animated with Phaser.js.
+I remade it in Phaser.js from the old version that was just Canvas.
 
-#TODOs for now:
+#TODO:
 
 - Make site look nicer

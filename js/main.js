@@ -9,12 +9,11 @@ $( document ).ready(function() {
     saturn, titan, dione, enceladus, rhea,
     uranus,
     neptune, triton,
-    ship, emitter;
+    ship, emitter, keys;
 
     //Constants namespace
     var planetRevolutionRadius = 80;
     var consts = {
-        //TODO: Find best size after GUI is done
         "sWidth": window.innerWidth -20,
         "sHeight": window.innerHeight -200,
         "worldSizeX": 1500,
@@ -88,6 +87,7 @@ $( document ).ready(function() {
 
         game.load.image("ship", "img/SpaceshipAbove.png");
         game.load.image("particle", "img/particle.jpg");
+        game.load.image("keys", "img/keys.png");
     }
 
     function toggleAllMoons(){
@@ -218,7 +218,6 @@ $( document ).ready(function() {
         triton = new celestialBody("triton", neptuneCenter, consts.moonOffset);
 
         //Ship
-        //TODO: Maybe add directional arrows image to show the ship can move.
         var shipStartX = consts.worldCenterX;
         var shipStartY = consts.worldCenterY+100;
         ship = game.add.sprite(shipStartX, shipStartY, "ship"); //Arbitrary position near center.
@@ -242,6 +241,19 @@ $( document ).ready(function() {
         var trailX = 300;
         var trailY = 10;
         emitter.start(false, trailX, trailY);
+        //Flashing keys image to show the ship can move.
+        keys = game.add.sprite(shipStartX, shipStartY+100, "keys");
+        keys.anchor.setTo(0.5, 0.5);
+    }
+
+    function flashSprite(sprite){
+        if (!sprite) {return;};
+        sprite.alpha += 0.015;
+    }
+    function destroyKeys(){
+        if (!keys) {return;};
+        keys.destroy();
+        keys = false;
     }
 
     function moveShip(){
@@ -253,6 +265,7 @@ $( document ).ready(function() {
 
         if (cursors.up.isDown)
         {
+            destroyKeys();
             ship.angle = consts.ship.direction.up;
             ship.body.velocity.y = -consts.ship.speed;
 
@@ -261,6 +274,7 @@ $( document ).ready(function() {
         }
         else if (cursors.down.isDown)
         {
+            destroyKeys();
             ship.angle = consts.ship.direction.down;
             ship.body.velocity.y = consts.ship.speed;
 
@@ -269,6 +283,7 @@ $( document ).ready(function() {
         }
         if (cursors.left.isDown)
         {
+            destroyKeys();
             ship.angle = consts.ship.direction.left;                
             ship.body.velocity.x = -consts.ship.speed; 
 
@@ -277,6 +292,7 @@ $( document ).ready(function() {
         }
         else if (cursors.right.isDown)
         {
+            destroyKeys();
             ship.angle = consts.ship.direction.right;
             ship.body.velocity.x = consts.ship.speed;
 
@@ -372,6 +388,7 @@ $( document ).ready(function() {
         orbitDynamicalBodies(neptune);
 
         moveShip();
+        flashSprite(keys);
     }
 
     $("#toggleMoons").click(toggleAllMoons);
