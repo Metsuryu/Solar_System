@@ -58,8 +58,8 @@ $( document ).ready(function() {
         game.load.image("sun", "img/Sun.png");
         game.load.image("shadow", "img/Shadow.png");
 
-        game.load.image("mercury", "img/Mercury.jpg");
-        game.load.image("venus", "img/Venus.jpg");
+        game.load.image("mercury", "img/Mercury.png");
+        game.load.image("venus", "img/Venus.png");
 
         game.load.image("earth", "img/Earth/Earth.jpg");
         game.load.image("moon", "img/Earth/Moon.jpg");
