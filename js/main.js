@@ -61,29 +61,29 @@ $( document ).ready(function() {
         game.load.image("mercury", "img/Mercury.png");
         game.load.image("venus", "img/Venus.png");
 
-        game.load.image("earth", "img/Earth/Earth.jpg");
-        game.load.image("moon", "img/Earth/Moon.jpg");
+        game.load.image("earth", "img/Earth/Earth.png");
+        game.load.image("moon", "img/Earth/Moon.png");
 
-        game.load.image("mars", "img/Mars/Mars.jpg");
-        game.load.image("deimos", "img/Mars/Deimos.jpg");
-        game.load.image("phobos", "img/Mars/Phobos.jpg");
+        game.load.image("mars", "img/Mars/Mars.png");
+        game.load.image("deimos", "img/Mars/Deimos.png");
+        game.load.image("phobos", "img/Mars/Phobos.png");
 
-        game.load.image("jupiter", "img/Jupiter/Jupiter.jpg");
-        game.load.image("callisto", "img/Jupiter/Moons/Callisto.jpg");
-        game.load.image("europa", "img/Jupiter/Moons/Europa.jpg");
-        game.load.image("ganymede", "img/Jupiter/Moons/Ganymede.jpg");
-        game.load.image("io", "img/Jupiter/Moons/Io.jpg");
+        game.load.image("jupiter", "img/Jupiter/Jupiter.png");
+        game.load.image("callisto", "img/Jupiter/Moons/Callisto.png");
+        game.load.image("europa", "img/Jupiter/Moons/Europa.png");
+        game.load.image("ganymede", "img/Jupiter/Moons/Ganymede.png");
+        game.load.image("io", "img/Jupiter/Moons/Io.png");
 
-        game.load.image("saturn", "img/Saturn/Saturn.jpg");
-        game.load.image("titan", "img/Saturn/Moons/Titan.jpg");
-        game.load.image("dione", "img/Saturn/Moons/Dione.jpg");
-        game.load.image("enceladus", "img/Saturn/Moons/Enceladus.jpg");
-        game.load.image("rhea", "img/Saturn/Moons/Rhea.jpg");
+        game.load.image("saturn", "img/Saturn/Saturn.png");
+        game.load.image("titan", "img/Saturn/Moons/Titan.png");
+        game.load.image("dione", "img/Saturn/Moons/Dione.png");
+        game.load.image("enceladus", "img/Saturn/Moons/Enceladus.png");
+        game.load.image("rhea", "img/Saturn/Moons/Rhea.png");
 
-        game.load.image("uranus", "img/Uranus/Uranus.jpg");
+        game.load.image("uranus", "img/Uranus/Uranus.png");
 
-        game.load.image("neptune", "img/Neptune/Neptune.jpg");
-        game.load.image("triton", "img/Neptune/Triton.jpg");
+        game.load.image("neptune", "img/Neptune/Neptune.png");
+        game.load.image("triton", "img/Neptune/Triton.png");
 
         game.load.image("ship", "img/SpaceshipAbove.png");
         game.load.image("particle", "img/particle.jpg");
