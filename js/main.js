@@ -56,7 +56,7 @@ $( document ).ready(function() {
     function preload(){
         game.load.image("space", "img/background.jpg");
         game.load.image("sun", "img/Sun.png");
-        game.load.image("shadow", "img/Shadow.png");
+        game.load.image("shadow", "img/shadow.png");
 
         game.load.image("mercury", "img/Mercury.png");
         game.load.image("venus", "img/Venus.png");
