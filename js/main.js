@@ -1,10 +1,10 @@
 $( document ).ready(function() {
 
-    var sun, 
-    mercury, 
-    venus, 
-    earth, moon, 
-    mars, deimos, phobos, 
+    var sun,
+    mercury,
+    venus,
+    earth, moon,
+    mars, deimos, phobos,
     jupiter, callisto, europa, ganymede, io,
     saturn, titan, dione, enceladus, rhea,
     uranus,
@@ -20,7 +20,7 @@ $( document ).ready(function() {
         "worldSizeY": 1500,
         "worldCenterX": 0,
         "worldCenterY": 0,
-        "rotationSpeed": 0.5, //0.5 looks best at default scale. 
+        "rotationSpeed": 0.5, //0.5 looks best at default scale.
         "revolutionSpeed": 15, //Global multiplier. Implemented in orbit(), can be changed in GUI.
         "angle": 3 * Math.PI / 180,
         "modAngle": 0,
@@ -50,7 +50,7 @@ $( document ).ready(function() {
     };
 
 
-    var game = new Phaser.Game(consts.sWidth, consts.sHeight, Phaser.AUTO, "canvas", 
+    var game = new Phaser.Game(consts.sWidth, consts.sHeight, Phaser.AUTO, "canvas",
         { preload: preload, create: create, update: update });
 
     function preload(){
@@ -105,7 +105,7 @@ $( document ).ready(function() {
             removeMoons(saturn);
             removeMoons(uranus);
             removeMoons(neptune);
-        }            
+        }
     }
 
     function removeMoons(planet){
@@ -129,19 +129,19 @@ $( document ).ready(function() {
 
 
     function celestialBody(sprite, revolveAround, revolutionRadius, revSpeed) {
-        //Panets start at different positions by changing starting angle each time one is created.
+        // Planets start at different positions by changing the starting angle each time one is created.
         var angleMod = (consts.modAngle +=1);
         this.sprite = game.add.sprite(consts.worldCenterX, consts.worldCenterY, sprite);
-        //Center of the sprite
+        // Center of the sprite
         var centerAnchor = 0.5;
         this.sprite.anchor.setTo(centerAnchor, centerAnchor);
-        //Each body must have own rotAngle to have different speed.
+        // Each body must have its own rotAngle to have a different speed.
         this.rotAngle = consts.angle + angleMod;
-        //Point to revolve around, sun for planets, planet for moons.
+        // Point to revolve around, sun for planets, planet for moons.
         this.revolveAround = revolveAround;
-        //We will be seen but not be heard, We are
+        // We will be seen but not be heard, We are
         this.revolutionRadius = revolutionRadius;
-        //Shadow. Attach to planet after moon are created, so it can cover them.
+        // Shadow. Attach to planet after moons are created, so it can cover them.
         this.center;
         this.shadow;
         this.moons = [];
@@ -166,7 +166,7 @@ $( document ).ready(function() {
     function create(){
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.add.tileSprite(0, 0, consts.worldSizeX, consts.worldSizeY, "space");
-        game.world.setBounds(0, 0, consts.worldSizeX, consts.worldSizeY);            
+        game.world.setBounds(0, 0, consts.worldSizeX, consts.worldSizeY);
         consts.worldCenterX = game.world.centerX;
         consts.worldCenterY = game.world.centerY;
 
@@ -284,11 +284,11 @@ $( document ).ready(function() {
         if (cursors.left.isDown)
         {
             destroyKeys();
-            ship.angle = consts.ship.direction.left;                
-            ship.body.velocity.x = -consts.ship.speed; 
+            ship.angle = consts.ship.direction.left;
+            ship.body.velocity.x = -consts.ship.speed;
 
             emitter.minParticleSpeed.set(emitter.particleSpeed, 0);
-            emitter.maxParticleSpeed.set(emitter.particleSpeed, 0);          
+            emitter.maxParticleSpeed.set(emitter.particleSpeed, 0);
         }
         else if (cursors.right.isDown)
         {
@@ -297,7 +297,7 @@ $( document ).ready(function() {
             ship.body.velocity.x = consts.ship.speed;
 
             emitter.minParticleSpeed.set(-emitter.particleSpeed, 0);
-            emitter.maxParticleSpeed.set(-emitter.particleSpeed, 0); 
+            emitter.maxParticleSpeed.set(-emitter.particleSpeed, 0);
         }
     }
     function randomInt(min, max) {

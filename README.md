@@ -1,6 +1,7 @@
 # Solar_System
+
 Here it is:
-http://solsys.co.nf/
+https://metsuryu.github.io/Solar_System/
 
 A small Solar system all planets and moons orbiting the Sun.
 
